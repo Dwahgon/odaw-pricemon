@@ -1,2 +1,4 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<div class="d-flex flex-row">
+	<h1 class="inria-serif-bold fs-1 text-warning">Monitore,<br />Compare,<br />Economize!</h1>
+	<div></div>
+</div>

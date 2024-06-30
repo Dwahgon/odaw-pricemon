@@ -1,0 +1,1 @@
+export { default as UserDto } from './postgres-user-dto';
