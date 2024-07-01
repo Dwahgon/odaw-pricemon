@@ -1,7 +1,16 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
+	import 'bootstrap/dist/css/bootstrap.css';
 	import type { LayoutData } from './$types';
-
 	export let data: LayoutData;
+
+	onMount(async () => {
+		if (!browser) return;
+
+		// this is enough for most components
+		await import('bootstrap'); // some components require a bootstrap instance, to fulfil their job. In that case, use this:// const bootstrap = await import("bootstrap");// sample usage: // const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+	});
 </script>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">

@@ -33,3 +33,7 @@
     font-weight: 700;
     font-style: italic;
 }
+
+.flex-basis-zero {
+    flex-basis: 0;
+}
