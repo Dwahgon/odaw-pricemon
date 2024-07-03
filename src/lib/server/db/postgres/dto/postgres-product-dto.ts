@@ -12,7 +12,7 @@ export default class PostgresProductDto implements ProductDto {
 
         await sql`CREATE TABLE IF NOT EXISTS ${sql(LISTINGS_TABLE_NAME)} (
             id SERIAL PRIMARY KEY,
-            url VARCHAR(100)
+            url VARCHAR(2048)
         )`;
 
         await sql`CREATE TABLE IF NOT EXISTS ${sql(VENDORS_TABLE_NAME)} (

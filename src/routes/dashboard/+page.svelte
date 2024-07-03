@@ -118,7 +118,7 @@
 							<input
 								type="url"
 								class="form-control"
-								maxlength="100"
+								maxlength="2048"
 								placeholder="https://www.revendedoraexemplo.com/geladeira-inox-500l"
 								bind:value={urlValue}
 							/>
