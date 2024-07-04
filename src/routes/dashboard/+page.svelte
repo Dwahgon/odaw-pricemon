@@ -153,7 +153,7 @@
 							if (form?.error) return;
 
 							await invalidateAll();
-							bootstrap.Modal.getOrCreateInstance(createProductModal)?.hide();
+							bootstrap.Modal.getInstance(createProductModal)?.hide();
 							document.querySelector('.modal-backdrop')?.remove();
 							setTimeout(() => (document.body.style.overflow = 'auto'), 500);
 						}}
