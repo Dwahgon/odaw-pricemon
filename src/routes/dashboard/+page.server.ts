@@ -3,6 +3,7 @@ import { fail, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
 import db from '$lib/server/db';
 import { parseUrlList } from '$lib/utils';
+import { SUPPORTED_VENDORS } from '$lib/constants';
 
 export const load: PageServerLoad = async ({ cookies }) => {
     await redirectToRootIfSessionSet(false)({ cookies });
@@ -29,6 +30,8 @@ export const actions = {
         if (!rawUrls) return fail(400, { error: 'field-missing', details: 'urls' });
 
         const urls = parseUrlList(rawUrls);
+        const invalidUrls = urls.filter(url => !SUPPORTED_VENDORS.has(new URL(url).hostname));
+        if (invalidUrls.length) return fail(400, { error: 'vendor-not-supported', details: invalidUrls });
 
         try {
             await db.productDto.register({ name, urls, description, userId });

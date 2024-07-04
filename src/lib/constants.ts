@@ -4,3 +4,8 @@ export const FIELD_TRANSLATIONS = new Map([
     ['password', 'Senha'],
     ['confirm-password', 'Confirmar senha'],
 ])
+
+export const SUPPORTED_VENDORS = new Set([
+    'www.mercadolivre.com.br',
+    'www.magazineluiza.com.br'
+])

@@ -5,9 +5,11 @@
 	import type { PageData } from './$types';
 	import { browser } from '$app/environment';
 	import ProductCard from './product-card.svelte';
-	import { parseUrlList } from '$lib/utils';
+	import { isUrlValid, parseUrlList } from '$lib/utils';
 	import type { ActionData } from './$types';
 	import FormAlert from '$lib/components/form-alert.svelte';
+	import { validate } from '$lib/actions';
+	import { SUPPORTED_VENDORS } from '$lib/constants';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -192,6 +194,10 @@
 								class="form-control"
 								maxlength="2048"
 								placeholder="https://www.revendedoraexemplo.com/geladeira-inox-500l"
+								use:validate={(v) =>
+									!isUrlValid(v) || SUPPORTED_VENDORS.has(new URL(v).hostname)
+										? ''
+										: 'Este website não é suportado.'}
 								bind:value={urlValue}
 							/>
 							<button class="btn btn-success" type="submit">
