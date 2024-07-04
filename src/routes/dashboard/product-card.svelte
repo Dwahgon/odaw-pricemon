@@ -118,7 +118,7 @@
 	</div>
 	<div class="card-footer d-flex flex-row">
 		{#each product.urls as url}
-			<a class="btn btn-warning m-1" href={url}>{new URL(url).hostname}</a>
+			<a target="_blank" class="btn btn-warning m-1" href={url}>{new URL(url).hostname}</a>
 		{/each}
 	</div>
 </div>
