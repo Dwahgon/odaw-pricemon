@@ -6,13 +6,16 @@
 	import { browser } from '$app/environment';
 	import ProductCard from './product-card.svelte';
 	import { parseUrlList } from '$lib/utils';
+	import type { ActionData } from './$types';
+	import FormAlert from '$lib/components/form-alert.svelte';
 
 	export let data: PageData;
+	export let form: ActionData;
 
 	let urlValue = '';
 	let urls = '';
 	let bootstrap: { Modal: any };
-	let form: HTMLFormElement;
+	let createProductForm: HTMLFormElement;
 	let selectedFilter = 0;
 	let productToDelete: Product;
 	let createProductModal: HTMLDivElement;
@@ -39,7 +42,7 @@
 	}
 
 	function reset() {
-		form.reset();
+		createProductForm.reset();
 		urls = '';
 	}
 </script>
@@ -134,14 +137,19 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
+				{#if form?.error}
+					<FormAlert formAction={form} />
+				{/if}
 				<form
 					id="create-product-form"
 					method="post"
 					action="?/createProduct"
-					bind:this={form}
+					bind:this={createProductForm}
 					use:enhance={() =>
 						async ({ result }) => {
 							await applyAction(result);
+							if (form?.error) return;
+
 							await invalidateAll();
 							bootstrap.Modal.getOrCreateInstance(createProductModal)?.hide();
 							document.querySelector('.modal-backdrop')?.remove();

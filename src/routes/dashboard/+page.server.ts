@@ -34,7 +34,7 @@ export const actions = {
             await db.productDto.register({ name, urls, description, userId });
             return { success: true }
         } catch (error) {
-            return fail(500, { error, details: '' });
+            return fail(500, { error: "internal-error", details: JSON.stringify(error) });
         }
     },
     deleteProduct: async ({ request }) => {
@@ -47,7 +47,7 @@ export const actions = {
             await db.productDto.delete(parseInt(productId as string));
             return { success: true }
         } catch (error) {
-            return fail(500, { error, details: '' });
+            return fail(500, { error: 'internal-error', details: JSON.stringify(error) });
         }
     }
 } satisfies Actions;

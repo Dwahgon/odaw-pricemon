@@ -1,27 +1,13 @@
 <script lang="ts">
+	import FormAlert from '$lib/components/form-alert.svelte';
 	import type { ActionData } from './$types';
 
 	export let form: ActionData;
-
-	const FIELD_TRANSLATIONS = new Map([
-		['email', 'Endereço e-mail'],
-		['password', 'Senha']
-	]);
 </script>
 
-<div>
+<div class="m-3">
 	{#if form?.error}
-		<div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-			<strong>Erro!</strong>
-			{#if form.error == 'field-missing'}
-				O campo "{FIELD_TRANSLATIONS.get(form.details)}" não foi preenchido
-			{:else if form.error === 'access-denied'}
-				Credenciais inválidos
-			{:else}
-				Erro desconhecido
-			{/if}
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
+		<FormAlert formAction={form} />
 	{/if}
 	<div class="card mx-auto my-4" style="width: 18rem;">
 		<h3 class="card-header">Cadastro</h3>

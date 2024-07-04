@@ -19,7 +19,7 @@ export const actions = {
         try {
             userId = await db.userDto.authenticate(email, password);
         } catch (error) {
-            return fail(500, { error, details: '' })
+            return fail(500, { error: "internal-error", details: JSON.stringify(error) });
         }
 
         if (userId != -1) {

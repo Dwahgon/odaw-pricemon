@@ -23,7 +23,7 @@ export const actions = {
         try {
             userId = await db.userDto.register({ email, name, password });
         } catch (error) {
-            return fail(500, { error, details: '' })
+            return fail(500, { error: "internal-error", details: JSON.stringify(error) });
         }
 
         cookies.set('sessionid', createSession(userId), { path: '/' });
