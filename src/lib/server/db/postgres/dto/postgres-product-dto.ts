@@ -66,4 +66,9 @@ export default class PostgresProductDto implements ProductDto {
         return completeProducts;
     }
 
+    async delete(product: number | { id: number }) {
+        const deleteId = typeof product == 'number' ? product : product.id;
+        await sql`DELETE FROM vendors WHERE product_id=${deleteId};`;
+        await sql`DELETE FROM products WHERE id=${deleteId};`;
+    }
 }

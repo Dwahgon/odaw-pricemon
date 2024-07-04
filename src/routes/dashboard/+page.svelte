@@ -11,10 +11,12 @@
 
 	let urlValue = '';
 	let urls = '';
-	let modal: HTMLDivElement;
 	let bootstrap: { Modal: any };
 	let form: HTMLFormElement;
 	let selectedFilter = 0;
+	let productToDelete: Product;
+	let createProductModal: HTMLDivElement;
+	let deleteProductModal: HTMLDivElement;
 
 	function addUrl() {
 		if (!urlValue) return;
@@ -30,6 +32,11 @@
 		if (!browser) return;
 		bootstrap = await import('bootstrap');
 	});
+
+	function showDeleteProductModal(product: Product) {
+		productToDelete = product;
+		bootstrap.Modal.getOrCreateInstance(deleteProductModal)?.show();
+	}
 
 	function reset() {
 		form.reset();
@@ -49,7 +56,11 @@
 	</div>
 	<div class="flex-grow-1 d-flex flex-column flex-basis-zero">
 		{#each data.userProducts as product}
-			<ProductCard {product} priceHistory={data.priceHistory.get(product.id) || []} {selectedFilter}
+			<ProductCard
+				{product}
+				priceHistory={data.priceHistory.get(product.id) || []}
+				{selectedFilter}
+				on:delete={() => showDeleteProductModal(product)}
 			></ProductCard>
 		{/each}
 	</div>
@@ -66,13 +77,55 @@
 	</div>
 </div>
 
+<form
+	id="delete-product-form"
+	method="post"
+	action="?/deleteProduct"
+	use:enhance={() =>
+		async ({ result }) => {
+			await applyAction(result);
+			await invalidateAll();
+			bootstrap.Modal.getOrCreateInstance(deleteProductModal)?.hide();
+			document.querySelector('.modal-backdrop')?.remove();
+			setTimeout(() => (document.body.style.overflow = 'auto'), 500);
+		}}
+>
+	<input name="product-id" type="hidden" value={productToDelete?.id} />
+</form>
+<div
+	class="modal fade"
+	id="deleteProduct"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="deleteProductLabel"
+	aria-hidden="true"
+	bind:this={deleteProductModal}
+>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="deleteProductLabel">Apagar Produto</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Você tem certeza que deseja apagar o produto <b>{productToDelete?.name}</b>?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-warning" data-bs-dismiss="modal">Fechar</button
+				>
+				<button type="submit" form="delete-product-form" class="btn btn-warning">Apagar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div
 	class="modal fade"
 	id="newProductModal"
 	tabindex="-1"
 	aria-labelledby="newProductModalLabel"
 	aria-hidden="true"
-	bind:this={modal}
+	bind:this={createProductModal}
 >
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -90,7 +143,7 @@
 						async ({ result }) => {
 							await applyAction(result);
 							await invalidateAll();
-							bootstrap.Modal.getOrCreateInstance(modal)?.hide();
+							bootstrap.Modal.getOrCreateInstance(createProductModal)?.hide();
 							document.querySelector('.modal-backdrop')?.remove();
 							setTimeout(() => (document.body.style.overflow = 'auto'), 500);
 						}}

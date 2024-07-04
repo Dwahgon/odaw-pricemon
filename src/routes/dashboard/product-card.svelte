@@ -1,14 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
-	import 'chartjs-adapter-date-fns';
 	import { groupBy } from '$lib/utils';
 
 	export let product: Product;
 	export let priceHistory: PriceHistory[];
 	export let selectedFilter: number = 0;
+	export let showOptions = false;
 	let chart: Chart<'line', { x: string | boolean; y: number }[], string | boolean>;
 	let canvas: HTMLCanvasElement;
+
+	const dispatchEvent = createEventDispatcher();
 
 	const FILTERS: [(d: Date) => boolean, (d: Date) => string][] = [
 		[
@@ -77,6 +79,7 @@
 	$: selectedFilter, updateChart();
 
 	onMount(() => {
+		if (!priceHistory.length) return;
 		chart = new Chart(canvas, {
 			type: 'line',
 			data: createData()
@@ -84,8 +87,25 @@
 	});
 </script>
 
-<div class="card m-3">
-	<div class="card-header">{product.name}</div>
+<div
+	class="card m-3"
+	on:mouseenter={() => (showOptions = true)}
+	on:mouseleave={() => (showOptions = false)}
+	role="article"
+>
+	<div class="card-header d-flex justify-content-between">
+		<h2>{product.name}</h2>
+		{#if showOptions}
+			<div class="d-flex justify-content-center align-content-between">
+				<button
+					class="btn d-flex justify-content-center align-items-center"
+					on:click={() => dispatchEvent('delete')}
+				>
+					<span class="material-symbols-outlined">delete</span>
+				</button>
+			</div>
+		{/if}
+	</div>
 	<div class="card-body">
 		<p class="card-text">{product.description}</p>
 	</div>

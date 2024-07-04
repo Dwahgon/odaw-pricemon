@@ -9,6 +9,7 @@ interface ProductDto {
     init(): Promise<void>;
     register(product: Required<Omit<Product, "id">>): Promise<number>;
     getProductsByUser(userId: number): Promise<Required<Product>[]>;
+    delete(product: number | { id: number }): Promise<void>;
 };
 
 interface PriceHistoryDto {

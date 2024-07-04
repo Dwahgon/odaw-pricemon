@@ -37,4 +37,17 @@ export const actions = {
             return fail(500, { error, details: '' });
         }
     },
+    deleteProduct: async ({ request }) => {
+        const data = await request.formData();
+        const productId = data.get('product-id');
+
+        if (!productId) return fail(400, { error: 'field-missing', details: 'product-id' });
+
+        try {
+            await db.productDto.delete(parseInt(productId as string));
+            return { success: true }
+        } catch (error) {
+            return fail(500, { error, details: '' });
+        }
+    }
 } satisfies Actions;
