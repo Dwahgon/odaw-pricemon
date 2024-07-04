@@ -90,8 +90,9 @@
 						async ({ result }) => {
 							await applyAction(result);
 							await invalidateAll();
-							bootstrap.Modal.getInstance(modal)?.hide();
+							bootstrap.Modal.getOrCreateInstance(modal)?.hide();
 							document.querySelector('.modal-backdrop')?.remove();
+							setTimeout(() => (document.body.style.overflow = 'auto'), 500);
 						}}
 				>
 					<input type="hidden" name="user-id" id="user-id" value={data.user?.id} />
