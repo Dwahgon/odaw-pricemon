@@ -6,7 +6,8 @@
 	export let product: Product;
 	export let priceHistory: PriceHistory[];
 	export let selectedFilter: number = 0;
-	export let showOptions = false;
+	export let optionsDisabled = false;
+	let showOptions = false;
 	let chart: Chart<'line', { x: string | boolean; y: number }[], string | boolean>;
 	let canvas: HTMLCanvasElement;
 
@@ -95,7 +96,7 @@
 >
 	<div class="card-header d-flex justify-content-between">
 		<h2>{product.name}</h2>
-		{#if showOptions}
+		{#if showOptions && !optionsDisabled}
 			<div class="d-flex justify-content-center align-content-between">
 				<button
 					class="btn d-flex justify-content-center align-items-center"
