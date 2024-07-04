@@ -19,15 +19,20 @@ conn = psycopg2.connect(database=env.get('DB_DATABASE'),
 config = configparser.ConfigParser()
 config.read('bot.config')
 
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.add_argument("--headless=new")
+driver = webdriver.Chrome(options=options)
 
 EXTRACTORS = {
     'www.mercadolivre.com.br': MercadoLivreExtractor(),
     'www.magazineluiza.com.br': MagaluExtractor(),
 }
 
+SLEEP_TIME_S = config['DEFAULT']['SLEEP_TIME_S']
+
 while True:
-    time.sleep(int(config['DEFAULT']['SLEEP_TIME_S']))
+    print(f'Waiting {SLEEP_TIME_S} seconds')
+    time.sleep(int(SLEEP_TIME_S))
     timestamp = datetime.now()
     pricehistory = []
 
@@ -35,6 +40,7 @@ while True:
     with conn.cursor() as cursor:
         cursor.execute("SELECT id, url FROM listings;")
         while (listing := cursor.fetchone()) is not None:
+            print(f'Extracting price from: {listing[1]}')
             parsed_url = urlparse(listing[1])
             hostname = parsed_url.hostname
             price = 0
@@ -46,6 +52,7 @@ while True:
             pricehistory.append((listing[0], timestamp.isoformat(), price))
 
     # Save history
+    print("Saving results")
     with conn.cursor() as cursor:
         cursor.executemany("INSERT INTO pricehistory(listing_id, query_timestamp, price) VALUES (%s, %s, %s)", pricehistory)
     conn.commit()
