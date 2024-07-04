@@ -38,7 +38,7 @@
 </script>
 
 <div class="d-flex flex-row">
-	<div class="flex-grow-1 flex-basis-zero m-2">
+	<div class="flex-grow-1 flex-basis-zero m-3">
 		<select class="form-select" bind:value={selectedFilter}>
 			<option value={0}>Última hora</option>
 			<option value={1}>Último dia</option>
