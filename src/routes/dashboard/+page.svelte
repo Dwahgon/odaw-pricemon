@@ -14,6 +14,7 @@
 	let modal: HTMLDivElement;
 	let bootstrap: { Modal: any };
 	let form: HTMLFormElement;
+	let selectedFilter = 0;
 
 	function addUrl() {
 		if (!urlValue) return;
@@ -37,16 +38,25 @@
 </script>
 
 <div class="d-flex flex-row">
-	<div class="flex-grow-1 flex-basis-zero"></div>
+	<div class="flex-grow-1 flex-basis-zero m-2">
+		<select class="form-select" bind:value={selectedFilter}>
+			<option value={0}>Última hora</option>
+			<option value={1}>Último dia</option>
+			<option value={2}>Última semana</option>
+			<option value={3}>Último mês</option>
+			<option value={4}>Último ano</option>
+		</select>
+	</div>
 	<div class="flex-grow-1 d-flex flex-column flex-basis-zero">
 		{#each data.userProducts as product}
-			<ProductCard {product} priceHistory={data.priceHistory.get(product.id) || []}></ProductCard>
+			<ProductCard {product} priceHistory={data.priceHistory.get(product.id) || []} {selectedFilter}
+			></ProductCard>
 		{/each}
 	</div>
-	<div class="flex-grow-1 flex-basis-zero text-end">
+	<div class="flex-grow-1 flex-basis-zero text-end m-3">
 		<button
 			type="button"
-			class="btn btn-warning m-3"
+			class="btn btn-warning"
 			data-bs-toggle="modal"
 			data-bs-target="#newProductModal"
 			on:click={reset}
